@@ -1,0 +1,36 @@
+version: "3.8"
+
+services:
+
+  database:
+    image: mysql:8.0
+    container_name: supermetrics_legacy_db
+    environment:
+      MYSQL_ROOT_PASSWORD: sldjfpoweifns
+      MYSQL_DATABASE: my_database
+      MYSQL_USER: my_user
+      MYSQL_PASSWORD: my_user_password
+    ports:
+      - '4306:3306'
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+
+  web_legacy:
+    container_name: supermetrics_legacy_web
+    build: ./docker/web_legacy
+    ports:
+      - "8081:80"
+    volumes:
+      - ./app:/var/www
+    depends_on:
+      - database
+
+  web:
+    container_name: supermetrics_web
+    build: ./docker/web
+    ports:
+      - "8080:80"
+    volumes:
+      - ./app:/var/www
+    depends_on:
+      - database
